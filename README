@@ -1,0 +1,17 @@
+zach.oreny, tamarals
+Zach Oreny (316265271), Tamar Alshech (208069740)
+EX: 5
+
+FILES:
+osm.cpp -- the implementation of the library described in Assignment 2
+Makefile -- the makefile required to compile osm.cpp
+results.png -- the bar graph which describes the results we obtained in Assignment 2
+
+REMARKS:
+None
+
+ANSWERS:
+
+Assignment 1:
+
+1. One general use of Linux pid namespaces 
