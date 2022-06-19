@@ -58,20 +58,20 @@ int child(void *arg) {
     char **params = static_cast<char **>(arg);
     int numprocess = atoi(params[3]);
 
-    printf("start creating container\n");
+    cout <<"start creating container"  <<endl;
     //change host name
     if (sethostname(params[1], strlen(params[1])) == FAILURE) {
         print_error("sethostname failed");
         exit(1);
     }
 
-    printf("set host name\n");
+    cout << "set host name" <<endl;
     //change root directory
     if (chroot(params[2]) == FAILURE) {
         print_error("chroot failed");
         exit(1);
     }
-    printf("change root directory\n");
+    cout << "change root directory"  <<endl;
 
     //limit number of processers
     //limit_proccess(numprocess);
@@ -82,7 +82,7 @@ int child(void *arg) {
         print_error("chdir failed");
         exit(1);
     }
-    printf("change working directory\n");
+    cout <<"change working directory"  <<endl;
 
     //mount the new procfs
     if (mount("proc", "/proc", "proc", 0, 0) == FAILURE) {
@@ -90,7 +90,7 @@ int child(void *arg) {
         exit(1);
     }
 
-    printf("mount\n");
+    cout <<"mount" <<endl;
     //run the program
     char* argument_list[] = {params[4]};
     for (int i = 1;;i++) {
@@ -104,7 +104,7 @@ int child(void *arg) {
         print_error("execv failed");
         exit(1);
     }
-    printf("run command\n");
+    cout <<"run command"  <<endl;
 
     return 1;
 }
