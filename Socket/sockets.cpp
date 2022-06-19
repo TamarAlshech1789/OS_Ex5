@@ -14,8 +14,8 @@
 
 #define MAX_CLIENTS 5
 #define BUFFER_SIZE 256
-#define FAILURE -1
 #define MAXHOSTNAME 256
+#define FAILURE -1
 
 
 /*
@@ -72,7 +72,14 @@ int Client(unsigned short portnum, char *cmd) {
     }
 
     //write msg to server
-    memcpy(buffer, cmd, sizeof(buffer));
+    int i = 0;
+    while(i < BUFFER_SIZE) {
+        buffer[i] = cmd[i];
+        if (cmd[i] == '/0')
+            break;
+        i++;
+    }
+
     if (write(client_fd, buffer, sizeof(buffer)) == FAILURE) {
         print_error("write failed.");
         close(client_fd);
@@ -80,27 +87,7 @@ int Client(unsigned short portnum, char *cmd) {
     }
 
     close(client_fd);
-}
-
-/*
- * read data coming from a client
- */
-int read_data(int server_fd, char *buf) {   // todo: finish this and understand where to put it
-    int bcount = 0;     // counts bytes read */
-    int br = 0;         // bytes read this pass
-
-    //go over the buffer
-    while (bcount < BUFFER_SIZE) {
-        br = read(s, buf, n-bcount))
-        if ((br > 0)  {
-            bcount += br;
-            buf += br;
-        }
-        if (br < 1) {
-            return(-1);
-        }
-    }
-    return(bcount);
+    return 1;
 }
 
 /*
@@ -112,10 +99,10 @@ int read_data(int server_fd, char *buf) {   // todo: finish this and understand 
  */
 int Server(unsigned short portnum) {
     char myname[MAXHOSTNAME+1];
-    int server_fd, client_fd;
+    char buffer[BUFFER_SIZE];
+    int server_fd, client_fd, valread;
     struct sockaddr_in sa;
     struct hostent *hp;
-    auto int on=1;
 
     //initialize variables
     memset(&sa, 0, sizeof(struct sockaddr_in));
@@ -164,18 +151,33 @@ int Server(unsigned short portnum) {
             close(server_fd);
             exit(1);
         }
-        // read_text(); todo: understand it
+
+        // get cmd from client
+        //read_data(client_fd, buffer); //todo: understand it
+        valread = read(client_fd, buffer, BUFFER_SIZE);
+        if (valread == FAILURE) {
+            print_error("read failed.");
+            close(server_fd);
+            exit(1);
+        }
+
+        //run cmd in terminal
+        if (system(buffer) == FAILURE) {
+            print_error("system command failed.");
+            close(server_fd);
+            exit(1);
+        }
     }
 
-    close(server_fd);
+    close(server_fd);   //todo: is it needs to be client or server
 }
 
 
 int main(int argc, char* argv[]) {
 
-    unsigned short portnum = atoi(argv[1]);
-    if (!strcmp(argv[1], "strcmp"))
-        Client(portnum, argv + 2);
+    unsigned short portnum = atoi(argv[2]);
+    if (!strcmp(argv[1], "client"))
+        Client(portnum, (argv[3]));
     else
         Server(portnum);
     //client <port> <terminal_command_to_run>

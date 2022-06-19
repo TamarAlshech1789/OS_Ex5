@@ -1,5 +1,6 @@
 #include <iostream>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sched.h>
@@ -8,7 +9,10 @@
 #include <sys/wait.h>
 #include <sys/mount.h>
 #include <sys/stat.h>
+#include <iostream>
+#include <fstream>
 
+using namespace std;
 
 #define STACK 8192
 #define MAX_HOST_NAME 256
@@ -27,7 +31,7 @@ void print_error(std::string text) {
 void limit_proccess(int max_proc) {
 
     // create a new directories
-    std::string dir("/sys");
+    std::string dir("/sys"), fileName;
     mkdir(dir.c_str(), 0755);
     dir += "/fs";
     mkdir(dir.c_str(), 0755);
@@ -36,40 +40,41 @@ void limit_proccess(int max_proc) {
     dir += "/pids";
     mkdir(dir.c_str(), 0755);
 
+    //write proccess id
+    fileName = dir + "cgroup.procs";
+    ofstream procID(fileName);
+    procID << getpid();
+    procID.close();
 
-
-
-
-
+    //write limitation on number of proccess
+    fileName = dir + "pids.max";
+    ofstream maxProc(fileName);
+    maxProc << max_proc;
+    maxProc.close();
 }
 
-int child(void *) {
-    //todo: test this!!
-    char hostname[MAX_HOST_NAME];
-    memcpy(hostname, arg[1], sizeof(hostname));
-    char *root_dir;
-    memcpy(root_dir, arg[2], sizeof(root_dir));
-    int numprocess = atoi(arg[3]);
-    char *program;
-    memcpy(program, arg[4], sizeof(program));
-    char *const *args; //todo: need also to include the program
+int child(void *arg) {
+
+    char **params = static_cast<char **>(arg);
+    int numprocess = atoi(params[3]);
 
     //change host name
-    if (sethostname(hostname, strlen(hostname)) == FAILURE) {
+    if (sethostname(params[1], strlen(params[1])) == FAILURE) {
         print_error("sethostname failed");
         exit(1);
     }
 
     //change root directory
-    if (chroot(root_dir) == FAILURE) {
+    if (chroot(params[2]) == FAILURE) {
         print_error("chroot failed");
         exit(1);
     }
 
     //limit number of processers
+    limit_proccess(numprocess);
 
     //change working directory
-    if (chdir(root_dir) == FAILURE) {
+    if (chdir(params[2]) == FAILURE) {
         print_error("chdir failed");
         exit(1);
     }
@@ -81,16 +86,24 @@ int child(void *) {
     }
 
     //run the program
-    if(execvp(program, args) == FAILURE) {
+    char* argument_list[] = {params[4]};
+    for (int i = 1;;i++) {
+        if (!params[i + 4]) {
+            argument_list[i] = NULL;
+            break;
+        }
+        argument_list[i] = params[i + 4];
+    }
+    if(execvp(params[4], argument_list) == FAILURE) {
         print_error("execv failed");
         exit(1);
     }
 
-
-    return 0;
+    return 1;
 }
 
 int main(int argc, char* argv[]) {
+
     void* stack = malloc(STACK);
     if (!stack) {
         print_error("malloc failed");
