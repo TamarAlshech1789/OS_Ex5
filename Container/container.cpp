@@ -78,8 +78,8 @@ int child(void *arg) {
 
     //change working directory
     if (chdir(params[2]) == FAILURE) {
-        printf("%s: %s\n",strerror(errno), params[2]);
         print_error("chdir failed");
+        printf("%s: %s\n",strerror(errno), params[2]);
         exit(1);
     }
     cout <<"change working directory"  <<endl;
