@@ -77,7 +77,7 @@ int child(void *arg) {
     //limit_proccess(numprocess);
 
     //change working directory
-    if (chdir(params[2]) == FAILURE) {
+    if (chdir("/") == FAILURE) {
         print_error("chdir failed");
         print_error(strerror(errno));
         printf("%s: %s\n",strerror(errno), params[2]);

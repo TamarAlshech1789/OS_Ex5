@@ -3,15 +3,32 @@ Zach Oreny (316265271), Tamar Alshech (208069740)
 EX: 5
 
 FILES:
-osm.cpp -- the implementation of the library described in Assignment 2
-Makefile -- the makefile required to compile osm.cpp
-results.png -- the bar graph which describes the results we obtained in Assignment 2
+container.cpp
+sockets.cpp
+Makefile
+README
 
 REMARKS:
 None
 
 ANSWERS:
 
-Assignment 1:
+Part 1 - theoretical questions:
 
-1. One general use of Linux pid namespaces 
+1. One general use of Linux pid namespaces is to isolate the process ID number space, 
+meaning that processes in different PID namespaces can have the same PID
+
+2. Linux mount namespaces is being used to help isolate a process by allows each proccess to have a completely different view of the entire system’s mountpoint structure from the original one. 
+This allows the isolated proccesses to have different root for each one, as well as other mountpoints that are specific to those processes. 
+
+3. One general use of Linux cgroups is to limits, accounts, and isolates the resource usage of a collection of processes.
+
+4. The use of the clone command is to creates a new process with some entry point.
+The difference between them is which data structures are shared between the parent proccess and the child ans which not. 
+For example, memory space, the table of file descriptors, and the table of signal handlers.
+
+5. The chroot command changes the root directory for a running processes as well as its child processes.
+
+6. The purpose of procfs is to present information about processes and other system information.
+An example of its use is to interact with "/proc" contents as with regular files.
+
