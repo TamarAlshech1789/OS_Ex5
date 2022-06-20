@@ -141,4 +141,7 @@ int main(int argc, char* argv[]) {
     }
 
     //delete all created files
+    std::string dir = argv[2];
+    dir += "/sys/fs";
+    rmdir(dir.c_str());
 }
