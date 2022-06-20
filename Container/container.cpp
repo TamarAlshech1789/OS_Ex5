@@ -31,7 +31,7 @@ void print_error(std::string text) {
 void limit_proccess(int max_proc) {
 
     // create a new directories
-    std::string dir("/sys/fs"), fileName;
+    std::string dir("./sys/fs"), fileName;
     //printf("makedir %s", dir.c_str());
     //mkdir(dir.c_str(), 0755);
     //dir = "/sys/fs";
