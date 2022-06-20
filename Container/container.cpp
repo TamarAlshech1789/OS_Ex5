@@ -129,6 +129,7 @@ int main(int argc, char* argv[]) {
 
     std::string proc = argv[2];
     proc += "/proc";
+    cout << "proc dir " << proc << endl;
     if (umount(proc.c_str()) == FAILURE) {
         print_error("clone stage failed.");
         exit(1);
