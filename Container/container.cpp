@@ -11,7 +11,6 @@
 #include <sys/stat.h>
 #include <iostream>
 #include <fstream>
-#include <allegro.h>
 
 using namespace std;
 
