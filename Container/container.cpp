@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <iostream>
 #include <fstream>
+#include <fcntl.h>
 
 using namespace std;
 
@@ -45,17 +46,20 @@ void limit_proccess(int max_proc) {
     ofstream procID(fileName);
     procID << getpid();
     procID.close();
+    umask(0755);
 
     //write limitation on number of proccess
     fileName = dir + "/pids.max";
     ofstream maxProc(fileName);
     maxProc << max_proc;
     maxProc.close();
+    umask(0755);
 
     fileName = dir + "/notify_on_release";
     ofstream notifyOnRelease(fileName);
     notifyOnRelease << 1;
     notifyOnRelease.close();
+    umask(0755);
 }
 
 int child(void *arg) {
@@ -142,6 +146,33 @@ int main(int argc, char* argv[]) {
 
     //delete all created files
     std::string dir = argv[2];
-    dir += "/sys/fs";
+    dir += "/sys/fs/cgroup/pids";
     rmdir(dir.c_str());
+
+//    std::string dir("/sys"), fileName;
+//    mkdir(dir.c_str(), 0755);
+//    dir += "/fs";
+//    mkdir(dir.c_str(), 0755);
+//    dir += "/cgroup";
+//    mkdir(dir.c_str(), 0755);
+//    dir += "/pids";
+//    mkdir(dir.c_str(), 0755);
+//
+//    //write proccess id
+//    fileName = dir + "/cgroup.procs";
+//    ofstream procID(fileName);
+//    procID << getpid();
+//    procID.close();
+//
+//    //write limitation on number of proccess
+//    fileName = dir + "/pids.max";
+//    ofstream maxProc(fileName);
+//    maxProc << max_proc;
+//    maxProc.close();
+//
+//    fileName = dir + "/notify_on_release";
+//    ofstream notifyOnRelease(fileName);
+//    notifyOnRelease << 1;
+//    notifyOnRelease.close();
+
 }
