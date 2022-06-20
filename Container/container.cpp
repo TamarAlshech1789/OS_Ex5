@@ -142,6 +142,7 @@ int main(int argc, char* argv[]) {
         print_error("clone stage failed.");
         exit(1);
     }
-
+    cout << "umount" <<endl;
+    
     //delete all created files
 }
