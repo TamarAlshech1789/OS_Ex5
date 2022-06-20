@@ -11,6 +11,7 @@
 #include <sys/stat.h>
 #include <iostream>
 #include <fstream>
+#include <allegro.h>
 
 using namespace std;
 
@@ -32,6 +33,10 @@ void limit_proccess(int max_proc) {
 
     // create a new directories
     std::string dir("./sys/fs"), fileName;
+    struct stat buffer;
+    if (stat("/sys", &buffer) != 0) {
+        printf("dir sys not found!");
+    }
     //printf("makedir %s", dir.c_str());
     //mkdir(dir.c_str(), 0755);
     //dir = "/sys/fs";
