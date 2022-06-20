@@ -41,13 +41,13 @@ void limit_proccess(int max_proc) {
     mkdir(dir.c_str(), 0755);
 
     //write proccess id
-    fileName = dir + "cgroup.procs";
+    fileName = dir + "/cgroup.procs";
     ofstream procID(fileName);
     procID << getpid();
     procID.close();
 
     //write limitation on number of proccess
-    fileName = dir + "pids.max";
+    fileName = dir + "/pids.max";
     ofstream maxProc(fileName);
     maxProc << max_proc;
     maxProc.close();
