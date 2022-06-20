@@ -127,7 +127,9 @@ int main(int argc, char* argv[]) {
     //waits for a signal
     wait(NULL);
 
-    if (umount("/proc") == FAILURE) {
+    std::string proc = argv[2];
+    proc += "/proc";
+    if (umount(proc.c_str()) == FAILURE) {
         print_error("clone stage failed.");
         exit(1);
     }
