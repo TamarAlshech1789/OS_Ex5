@@ -31,21 +31,13 @@ void print_error(std::string text) {
 void limit_proccess(int max_proc) {
 
     // create a new directories
-    std::string dir("./sys/fs"), fileName;
-    struct stat buffer;
-    if (stat("/sys", &buffer) != 0) {
-        printf("dir sys not found!");
-    }
-    //printf("makedir %s", dir.c_str());
-    //mkdir(dir.c_str(), 0755);
-    //dir = "/sys/fs";
-    printf("makedir %s", dir.c_str());
+    std::string dir("/sys"), fileName;
+    mkdir(dir.c_str(), 0755);
+    dir += "/fs";
     mkdir(dir.c_str(), 0755);
     dir += "/cgroup";
-    printf("makedir %s", dir.c_str());
     mkdir(dir.c_str(), 0755);
     dir += "/pids";
-    printf("makedir %s", dir.c_str());
     mkdir(dir.c_str(), 0755);
 
     //write proccess id
@@ -82,7 +74,7 @@ int child(void *arg) {
     cout << "change root directory"  <<endl;
 
     //limit number of processers
-    //limit_proccess(numprocess);
+    limit_proccess(numprocess);
 
     //change working directory
     if (chdir("/") == FAILURE) {
@@ -142,7 +134,6 @@ int main(int argc, char* argv[]) {
         print_error("clone stage failed.");
         exit(1);
     }
-    cout << "umount" <<endl;
-    
+
     //delete all created files
 }
