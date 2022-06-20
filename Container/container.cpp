@@ -51,6 +51,11 @@ void limit_proccess(int max_proc) {
     ofstream maxProc(fileName);
     maxProc << max_proc;
     maxProc.close();
+
+    fileName = dir + "/notify_on_release";
+    ofstream notifyOnRelease(fileName);
+    notifyOnRelease << 1;
+    notifyOnRelease.close();
 }
 
 int child(void *arg) {
